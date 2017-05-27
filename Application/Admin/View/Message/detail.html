@@ -1,0 +1,45 @@
+<extend name="Public/base"/>
+
+ <block name="sidebar">
+	<div id="subnav" class="subnav" style="color:#ffffff">
+		<p><span id="sayhi"></span>,{:session('user_auth.username')}</p>
+	</div>
+	<script>
+		var hours={$_hours};
+		if(hours>=6&&hours<11){
+			$('#sayhi').html('上午好');
+		} else if(hours>=11&&hours<13){
+			$('#sayhi').html('中午好');
+		} else if(hours>=13&&hours<18){
+			$('#sayhi').html('下午好');
+		} else if(hours>=18&&hours<24){
+			$('#sayhi').html('晚上好');
+		} else {
+			$('#sayhi').html('您好');
+		}
+	</script>
+ </block>
+
+<block name="body">
+    <div class="main-title">
+        <h2>发送私信</h2>
+    </div>
+    <form action="{:U()}" method="post" class="form-horizontal">
+        <div class="form-item">
+            <label class="item-label">标题<span class="check-tips"></span></label>
+            <div class="controls">
+                <input type="text" class="text input-large" name="title" value="{$list['title']}">
+            </div>
+        </div>
+        <div class="form-item">
+            <label class="item-label">内容<span class="check-tips"></span></label>
+            <div class="controls">
+                <textarea  class="text input-large" style="width: 600px;height: 200px;" name="message" >{$list['message']}</textarea>
+            </div>
+        </div>
+        <input type="hidden" name="reciver" value="{$reciver}">
+        <div class="form-item">
+            <button class="btn btn-return" onclick="javascript:history.back(-1);return false;">返 回</button>
+        </div>
+    </form>
+</block>

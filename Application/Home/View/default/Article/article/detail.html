@@ -1,0 +1,185 @@
+<extend name="Base/common"/>
+<head>
+	<script type="text/javascript" src="__CO__/comment.js" ></script>
+</head>
+<block name="body">
+    <div class="span9 main-content">
+        <!-- Contents
+        ================================================== -->
+        <h2>{$info.title}</h2>
+        <section id="contents">{$info.content}</section>
+        <div  style="display: inline-block;width:100%">
+        	<div style="text-align:right;display: inline-block;width:100%">
+				<span  class="pull-right">
+				<if condition="$_order eq 'order'">
+					<span class="author"><a id='order'>关注</a></span>
+					<else/>
+					<span class="author"><a id='cancleorder'>取消关注</a></span>
+				</if>
+					<span class="author">{$info.uid|get_username}</span>
+					<span> 发表于 {$info.create_time|date='Y-m-d H:i',###}</span>
+				</span>
+			</div>
+			<div style="text-align:right;display: inline-block;">
+				<span class="pull-right">
+					<article:prev name="prev" info="info">
+					<span style="display: block;float: left;width: 58px;padding: 6px 18px 0px 0px;height: 26px;
+								background-color: #999999;color: #fff;font-size: 14px;margin-right: 7px;">
+                      <a href="{:U('?id='.$prev['id'])}" style="text-decoration:none;color:#FFF;">上一篇</a>
+                     </span>
+                	</article:prev>
+                  <article:next name="next" info="info">
+                  <span style="display: block;float: left;width: 58px;padding: 6px 18px 0px 0px;height: 26px;
+								background-color: #999999;color: #fff;font-size: 14px;margin-right: 7px;">
+                      <a href="{:U('?id='.$next['id'])}" style="text-decoration:none;color:#FFF;">下一篇</a>
+                  </span>
+                  </article:next>
+				</span>
+			</div>
+        </div>
+        
+        <div style="text-align: center;">
+	       <img id="dashang" name="{:U('Home/Article/addscore')}" src="Public/Home/images/shang.png">
+	       <input id="uid" type="hidden" value="{$info['uid']}"/>
+	       <script>
+	        var url_dashang=$('#dashang').attr('name');
+	        var uid=$('#uid').attr('value');
+	       	$('#dashang').click(function(){
+	       		$.ajax({
+					url:url_dashang,
+					type:"post",
+					data:{uid:uid},
+					success:function(data){
+						alert(data.info);
+						window.location.reload();
+					}
+				});
+	       	});
+	       </script>
+        </div>
+        
+        <div>
+        	<span>
+        		<a id="zan" name="{:U('Home/Article/addzan')}">赞</a>({$info['thumbs_up_count']})</span>
+				<input id="zan1" type="hidden" value="{$info['id']}">
+				<script>
+					var articleid=$('#zan1').attr('value');
+					var url_zan=$('#zan').attr('name');
+					$('#zan').click(function(){
+			       		$.ajax({
+							url:url_zan,
+							type:"post",
+							data:{articleid:articleid},
+							success:function(data){
+								alert(data);
+								window.location.reload();
+							}
+						});
+			       	});
+				</script>
+        </div>
+    
+        <hr/>
+        {:hook('documentDetailAfter',$info)}
+    
+    <div class="comment-filed">
+  <!--发表评论区begin-->
+  
+	<div class="comment-num">
+		<span>{$num}条评论</span>
+	</div>
+	<div>
+		<div>
+		<textarea name='message' id='message' class="txt-commit" replyid="0"></textarea>
+		</div>
+			<input type="button" id="add" value="发表评论" />  
+	</div>
+	<script>
+		$(document).ready(function(){
+		    $("#add").click(function(){
+				$.ajax({
+					url:"{:U('addComment',array('articleid'=>$info['id']))}",
+					type:"post",
+					data:$("#message").serialize(),
+					success:function(data){
+						alert(data);
+						 window.location.reload();
+					},
+					error:function(data){
+						alert('评论失败');
+						 window.location.reload();
+					}
+				})
+		    });
+		});
+		$(document).ready(function(){
+		    $("#order").click(function(){
+				$.ajax({
+					url:"{:U('order',array('uid'=>$info['uid']))}",
+					type:"post",
+					success:function(data){
+						alert(data);
+						 window.location.reload();
+					},
+					error:function(data){
+						alert('关注失败');
+						 window.location.reload();
+					}
+				})
+		    });
+		});
+		$(document).ready(function(){
+		    $("#cancleorder").click(function(){
+				$.ajax({
+					url:"{:U('cancleorder',array('uid'=>$info['uid']))}",
+					type:"post",
+					success:function(data){
+						alert(data);
+						 window.location.reload();
+					},
+					error:function(data){
+						alert('取消关注失败');
+						 window.location.reload();
+					}
+				})
+		    });
+		});
+	</script>
+  <!--发表评论区end-->
+
+  <!--评论列表显示区begin-->
+  	<!-- {$commentlist} -->
+  	<div class="comment-filed-list" >
+	  	<div><span>全部评论</span></div>
+	  	<div class="comment-list" >
+	  		<!--一级评论列表begin-->
+	  		<ul class="comment-ul">	  	
+	  			<volist name="commlist" id="data">	  				
+	  				<li comment_id="{$data.id}">	  				
+	  				<div >
+	  					<div>
+  							<img class="head-pic"  src="{$data.head_pic}" alt="">	
+  						</div>
+						<div class="cm">
+							<div class="cm-header">
+	  						<span>{$data.nickname}</span>
+	  						<span>{$data.create_time}</span>
+	  						</div>
+							<div class="cm-content">
+		  						<p>
+		  							{$data.message}
+		  						</p>
+							</div>
+						</div>	  					  						  				
+	  				</div>
+	  			</li>
+	  			</volist>	  				  				  				  				  
+	  		</ul>
+	  		<!--一级评论列表end-->
+	  	</div>		
+  	</div>
+  <!--评论列表显示区end-->
+</div>	
+</div>
+</block>
+			

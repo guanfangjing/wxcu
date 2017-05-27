@@ -1,0 +1,56 @@
+<extend name="Public/base"/>
+<block name="sidebar">
+
+</block>
+
+<block name="body">
+    <div class="span9" style="width: 60%;margin:100px auto 0 auto;">
+        <section id="contents">
+        	<volist name="lists" id="article">
+                     <div class="">
+                    <h3>
+                    	<a href="/onethink/index.php?s=/Home/Article/detail/id/{$article['id']}.html">{$article.title}</a>
+                    </h3>
+                </div>
+                <div>
+                    <p class="lead">{$article.description}</p>
+                </div>
+                <div>
+                    <span><a href="{:U('Article/detail?id='.$article['id'])}">查看全文</a></span>
+                    <span class="pull-right">
+                        <span class="author">{$article.uid|get_username}</span>
+                        <span>于 {$article.create_time|date='Y-m-d H:i',###}</span> 发表在 <span>
+                        <a href="{:U('Article/lists?category='.get_category_name($article['category_id']))}">{$article.category_id|get_category_title}</a></span> ( 阅读：{$article.view} )
+                    </span>
+                </div>
+                <hr/>
+                </volist>
+        </section>
+    </div>
+</block>
+
+
+<block name="style">
+    <style>
+        body{padding: 0}
+    </style>
+</block>
+
+
+
+<block name="script">
+<script type="text/javascript">
+    /* 插件块关闭操作 */
+    $(".title-opt .wm-slide").each(function(){
+        $(this).click(function(){
+            $(this).closest(".columns-mod").find(".bd").toggle();
+            $(this).find("i").toggleClass("mod-up");
+        });
+    })
+    $(function(){
+        // $('#main').attr({'id': 'indexMain','class': 'index-main'});
+        $('.copyright').html('<div class="copyright"> ©2017-2018 无锡城市职业技术学院版权所有</div>');
+        $('.sidebar').remove();
+    })
+</script>
+</block>
